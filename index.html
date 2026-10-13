@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Portfolio project exploring CDC mental health data.">
+<title>Mental Health Data Project | Portfolio</title>
+
+<style>
+:root {
+    --navy: #183b4e;
+    --teal: #327783;
+    --background: #f3f6f8;
+    --white: #ffffff;
+    --text: #24313a;
+    --muted: #5d6b73;
+    --border: #dbe3e8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.7;
+}
+
+a {
+    color: #176477;
+}
+
+a:focus-visible {
+    outline: 3px solid #e6a817;
+    outline-offset: 3px;
+}
+
+header {
+    background: var(--navy);
+    color: white;
+    padding: 60px 20px 45px;
+}
+
+.hero {
+    max-width: 1100px;
+    margin: auto;
+}
+
+.eyebrow {
+    color: #b9dce2;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: clamp(34px, 5vw, 55px);
+    line-height: 1.15;
+    margin: 15px 0;
+}
+
+header p {
+    max-width: 750px;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    border: 1px solid #9fc4cc;
+    border-radius: 6px;
+    padding: 8px 13px;
+}
+
+nav a:hover {
+    background: var(--teal);
+}
+
+main {
+    max-width: 1100px;
+    margin: auto;
+    padding: 25px 18px;
+}
+
+section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    scroll-margin-top: 15px;
+}
+
+h2 {
+    color: var(--navy);
+    font-size: 27px;
+    margin-top: 0;
+}
+
+h3 {
+    color: var(--navy);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    min-width: 0;
+}
+
+.card h3 {
+    margin-top: 0;
+}
+
+.chart-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    margin: 12px 0;
+}
+
+.placeholder {
+    border: 2px dashed #9eafb8;
+    border-radius: 8px;
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--muted);
+    background: #f8fafb;
+    margin: 12px 0;
+}
+
+.note {
+    padding: 16px;
+    border-left: 4px solid var(--teal);
+    background: #eaf3f5;
+    border-radius: 4px;
+}
+
+.button {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    margin: 8px 0;
+}
+
+.button:hover {
+    background: var(--teal);
+}
+
+.dashboard-frame {
+    width: 100%;
+    height: 720px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.video-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+}
+
+.embed-container {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #f8fafb;
+}
+
+footer {
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 25px 18px;
+}
+
+footer a {
+    color: #c6e7ec;
+}
+
+@media (max-width: 700px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    section {
+        padding: 20px;
+    }
+
+    .dashboard-frame {
+        height: 600px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="hero">
+        <p class="eyebrow">Design Technology Core 1 | Portfolio | CDC Dataset | Fatima Abdul Aleem</p>
+
+        <h1>Mental Health in the United States</h1>
+
+        <nav aria-label="Main navigation">
+            <a href="#overview">Overview</a>
+            <a href="#data">Dataset</a>
+            <a href="#eda">EDA Visualizations</a>
+            <a href="#findings">Key Findings</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#experiment">A/B Test</a>
+			<a href="#Takeaways">Takeaways</a>
+            <a href="#screenrecord">Screen recording</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+
+    <!-- PROJECT OVERVIEW -->
+
+    <section id="overview">
+        <h2>Project Overview</h2>
+
+        <p>
+            <strong>Main Question:</strong>
+            How does mental health impact across the years, demographics,
+            and states, as well as how does it compare from North Carolina to other
+			parts of the US?
+        </p>
+		<p>
+			<strong>Audience:</strong>
+			Those in public health, healthcare organizations, and professionals. 
+		 </p>
+		 <p>
+			<strong>Objective:</strong>
+            To be able to create a clearer picture on the dataset  
+			in order to be able to see the impact mental health has on who, 
+			what, and where.
+		</P>
+		<p>
+			<I>
+			*This dataset is a mix of percentages and numbers, along 
+			with means, averages, ages, prevalence, etc. Data is uniquie to each row.
+			</I>
+        </p>
+		
+		<p> 
+		<small>
+			Date: Last updated datset on September 22, 2026
+		</P>
+		<p>
+			Methods: EDAs, Data analysis
+		</p>
+		<p>
+			Tools: Python, Google Colab, Tableau, ChatGPT
+		</small>
+		</p>
+		
+    </section>
+
+
+    <!-- DATASET SOURCE -->
+
+    <section id="data">
+        <h2>Dataset</h2>
+
+        <p>
+		<strong>Dataset Breakdown</strong>
+        <ul>
+			<li>Total Dataset: 398,793 rows, 34 columns</li>
+			<li>Mental Health Datasets: 21,883 rows, 24 columns</li>
+			<li>Split  into numbers and percentages</li>
+		</ul>
+        </p>
+
+		<p>
+            <strong>Dataset:</strong>
+            <a href="https://data.cdc.gov/Chronic-Disease-Indicators/U-S-Chronic-Disease-Indicators/hksd-2xuw/about_data 
+			"
+               target="_blank" rel="noopener noreferrer">
+               CDC Chronic Disease Indicators
+            </a>
+
+    </section>
+
+
+    <!-- EXPLORATORY DATA ANALYSIS -->
+
+    <section id="eda">
+        <h2>Exploratory Data Analysis</h2>
+
+        <p>
+            <i>These visualizations explore mental health from three
+            perspectives: trends over time, demographic differences,
+            and geographic variation.</i>
+        </p>
+
+        <div class="grid">
+
+            <article class="card">
+                <h3>01. Mental Health Days Among Adults</h3>
+
+                <p>
+                    <strong>Question:</strong>
+                    What is the average mental health days over the years?
+                </p>
+                <img class="chart-image"
+                     src="barplot.png"
+                     alt="Bar chart of average mentally unhealthy days by year.">
+
+                <p>
+                    <strong>What it shows:</strong>
+                    <ul>
+					<li>Looks at "average mentally unwell days among adults" over the years. </li>
+					<li>Data from 2022 not reported</li>
+					<li>Determine how many mentally unwell days are reported per year</li>
+					</ul>
+				</p>
+            </article>
+
+
+            <article class="card">
+                <h3>02. Mental Health Prevalence in North Carolina Adults</h3>
+
+                <p>
+                    <strong>Question:</strong>
+                    What is the prevalence of mental health throughout
+					the years in North Carolina?
+                </p>
+                <img class="chart-image"
+                     src="Line.png"
+                     alt="Line chart depression prevalence across years in NC.">
+
+                <p>
+                    <strong>What it shows:</strong>
+                    <ul>
+					<li>Looks at mental health prevalence in North Carolina through the years, split into categories</li>
+					<li>Lacking data for postpartum depression</li>
+					<li>Increasing prevalence of depression and mental distress among adults through the years</li>
+					</ul>
+                </p>
+            </article>
+
+
+            <article class="card">
+                <h3>03. Depression Prevalence by Race/Ethnicity in North Carolina</h3>
+
+                <p>
+                    <strong>Question:</strong>
+                    How does the mental health data vary throughout North Carolina?
+					Such as demographic data.
+                </p>
+
+                <img class="chart-image"
+                     src="scatterplot.png"
+                     alt="Scatter plot showing depression prevalence by race/ethnicity.">
+
+                <p>
+                    <strong>What it shows:</strong>
+                    <ul>
+					<li>Looks at "depression among adults" in North Carolina through the years, based on demographics</li>
+					<li>Not all the data collected it a statistically equal</li>
+					<li>Shows prevalence of depression based on race/ethnicity</li>
+					</ul>
+                </p>
+            </article>
+
+
+        </div>
+    </section>
+
+
+    <!-- KEY FINDINGS -->
+
+    <section id="findings">
+        <h2>Key Findings</h2>
+
+        <p>
+		Overall, based on the EDAs, a pattern for mental health prevalence and indicators over time increased.
+		However, due to the availability of data the results are not 100% accurate.
+		</p>
+		<p>
+        <ul>
+		<li><strong>01. Visualization 1</strong></li>
+			<ul>
+				<li>The data shows similar amounts of reported mentally unwell days among adults through the years</li>
+				<li>No data from 2022, making it difficult to determine if patterns hold</li>
+			</ul>
+		<li><strong>02. Visualization 2</strong></li>
+			<ul>
+				<li>The data shows an increase in mental health indicators in North Carolina throughout the years</li>
+				<li>Limited data collected on postpartum depressive symptoms, leading to limiations on conclusions</li>
+			</ul>
+		<li><strong>03. Visualization 3</strong></li>
+			<ul>
+				<li>Higher prevalence of depression in adults based on race/ethniciy</li>
+				<li>Based on data collected, which is limited in some areas compared to others</li>
+			</ul>
+		</ul>
+		<p>
+		<strong>Qualitative text analysis:</strong>
+		<ul>
+			<li><strong>Theme 1</strong>: Mental Health indicators in the United States are looked at through 5 main different questions</li>
+			<ul>
+				<li>Depression among adults</li>
+				<li>Frequent mental distress among adults</li>
+				<li>Postpartum depressive symptopms among women with a recent live birth</li>
+				<li>Current poor mental health among high school students</li>
+				<li>Average mentally unhealthy days among adults</li>
+			</ul>
+			<li><strong>Theme 2</strong>: CDC is looking at mainly adults <i>but high school students are noted</i></li>
+		</ul>
+		</p>
+        </p>
+    </section>
+
+
+    <!-- INTERACTIVE DASHBOARD -->
+
+    
+	<section id="dashboard">
+		<h2>Dashboard</h2>
+
+
+		<div class='tableauPlaceholder' id='viz1791849533830' style='position: relative'><noscript><a href='#'>
+		<img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;CD&#47;CDC_MentalHealth_Dataset_FatimaAleem&#47;VD1UnhealthDays&#47;1_rss.png' 
+		style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> 
+		<param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='CDC_MentalHealth_Dataset_FatimaAleem&#47;VD1UnhealthDays' />
+		<param name='tabs' value='yes' /><param name='toolbar' value='yes' /><param name='static_image' 
+		value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;CD&#47;CDC_MentalHealth_Dataset_FatimaAleem&#47;VD1UnhealthDays&#47;1.png' /> <param name='animate_transition'
+		value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' 
+		value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1791849533830'); 
+		var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1000px';vizElement.style.height='850px';} 
+		else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1000px';vizElement.style.height='850px';} else { vizElement.style.width='100%';vizElement.style.height='750px';}     
+		var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                  
+		vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+
+		<p>
+			<a class="button"
+			href="https://public.tableau.com/views/CDC_MentalHealth_Dataset_FatimaAleem/VD3DepressionPrevalencebystate?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link"
+			target="_blank"
+			rel="noopener noreferrer">
+			Link to Dashboard
+			</a>
+		</p>
+	</section>
+
+
+    <!--  A/B TEST -->
+
+    <section id="experiment">
+        <h2>A/B Test</h2>
+
+        <p>
+            <ul>
+			<li><strong>Overall finding:</strong> Noticed mental health prevalence increasing from 2021 - 2023</li>
+			<li><strong>Assumption:</strong> Mental health in adults is getting worse</li>
+			<li><strong>Why care:</strong> What can be done about it, anything to reduce the increase?</li>
+			</ul>
+		
+			If adults complete an online mental health
+			screening, they might be more comfortable reporting their
+			symptoms. This could <i>potentially</i> lead to mental health 
+			concerns be addressed earlier and maybe reduce the number
+			of mentally unwell days.
+        </p>
+
+        <div class="grid">
+            <div class="card">
+                <p><strong>Version A:</strong> The baseline or current process for screening mental health challenges.</p>
+            </div>
+
+            <div class="card">
+                <p><strong>Version B:</strong> Including a required online mental health screening survery.</p>
+                <p>
+				<ul>
+				<li>We expect that changing to a required online mental health screening will lead to a reduction in mentally unwell days because there will be a possibility that they will be diagnosed earlier.</li>
+                </ul>
+				</p>
+            </div>
+        </div>
+
+        <h3>Eligible Participants</h3>
+
+        <p>
+            <ul>
+				<li>Focus on North Carolina, as a pilot test</li>
+				<li>Randomly select patients from yearly checkups [in private, public, teaching hosptials]</li>
+				<li>Regardless of location, even the same hosptial, patients will be split into version A and B at random</li>
+				<li>Be 18 and older</li>
+				<li>Test will go for a year due to data being collected on a yearly bases</li>
+
+			</ul>
+		</p>
+		<p>
+        <strong>Main sucess measure:</strong>
+		If Version B leads to a reduction in mentally unwell days compared to the current reports.</li>
+        </p>
+		<p>
+		<strong>Improvement:</strong>
+		A 15% reduction would be a meaningful value. 
+		</p>
+		
+		</p>
+    </section>
+
+	<!-- Conclusion -->
+
+    <section id="Takeaways">
+        <h2>Takeaways</h2>
+		<p>
+			<strong>Implications:</strong>
+		<ul>
+		<li>Mental Health challenges across the United States is increases as the years go on.</li>
+		</p>
+		</ul>
+		<p>
+			<strong>Limitations:</strong>
+		<ul>
+		<li>It is important to consider that not everyone might be comfortable or able to do online mental health screening.</li>
+		<li>Need to consider broader events that can impact mental health, such as world events.</li>
+		<li>Things like grief, acute issues also would impact the data.</li>
+		<li>The data collected is not consistent statistically for all indicators, demographics, years.</li>
+		</p>
+		</p>
+	</section>
+	
+    <!-- SCREEN-RECORDED WALKTHROUGH --->
+
+    <section id="screenrecording">
+        <h2>Project Walkthrough</h2>
+
+		<div class="embed-container">
+			<video class="video-frame" controls>
+				<source src="CDC_Mental Health_Dataset_Fatima Aleem _ Tableau Public - Screencastify - October 12, 2026 7_16 PM (1).webm" type="video/webm">
+			</video>
+		</div>
+
+    </section>
+
+<footer>
+    <p>Mental Health Data Exploration | Portfolio Project</p>
+    <p>
+        Data source:
+        <a href="https://www.cdc.gov/cdi/"
+           target="_blank"
+           rel="noopener noreferrer">
+            Centers for Disease Control and Prevention
+        </a>
+    </p>
+</footer>
+
+
+</body>
+</html>
