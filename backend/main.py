@@ -176,6 +176,18 @@ def options() -> dict[str, Any]:
         "demographic_groups": sorted(
             data["Stratification1"].dropna().unique().tolist()
         ),
+        "groups_by_category": {
+            str(category): sorted(
+                subset["Stratification1"].dropna().unique().tolist()
+            )
+            for category, subset in data.groupby("StratificationCategory1", observed=True)
+        },
+        "questions_by_unit": {
+            str(unit): sorted(
+                subset["Question"].dropna().unique().tolist()
+            )
+            for unit, subset in data.groupby("DataValueUnit", observed=True)
+        },
         "estimate_types": sorted(data["DataValueType"].dropna().unique().tolist()),
     }
 
