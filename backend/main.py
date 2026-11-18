@@ -370,8 +370,9 @@ def analyze(filters_model: AgentFilters) -> dict[str, Any]:
             "Do not make causal claims, diagnoses, or treatment recommendations. "
             "Explain that these are population-level CDC indicators, not information "
             "about an individual's mental health. Summarize the selected measure, main pattern, "
-            "and a key data limitation in exactly two short sentences of no more than 20 words each. "
-            "Use no heading or bullets."
+            "the point count and key data limitation in exactly two very short sentences, "
+            "maximum 12 words each. Output only those sentences: no heading, bullets, lists, "
+            "tables, or extra text."
         )
         client = OpenAI(api_key=api_key)
         response = client.responses.create(
