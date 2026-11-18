@@ -224,6 +224,24 @@ footer a {
         scroll-behavior: auto;
     }
 }
+
+/* Embedded CDC agent explorer */
+.agent-intro{color:var(--muted);max-width:850px}.agent-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0}
+.agent-field{display:flex;flex-direction:column;gap:6px;min-width:0}.agent-field label{font-weight:700;color:var(--navy)}
+.agent-field select{width:100%;min-height:42px;padding:9px 10px;border:1px solid var(--border);border-radius:6px;background:white;color:var(--text);font:inherit}
+.agent-field select[multiple]{min-height:150px}.agent-help{color:var(--muted);font-size:13px;margin:0}
+.agent-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:18px}
+.agent-run{border:0;cursor:pointer;background:var(--navy);color:white;padding:12px 18px;border-radius:6px;font:inherit;font-weight:700}
+.agent-run:hover{background:var(--teal)}.agent-run:disabled{opacity:.55;cursor:wait}.agent-status{color:var(--muted);font-size:14px}
+.agent-results{margin-top:24px}.agent-results[hidden]{display:none}.agent-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.agent-metric{background:#f3f6f8;border:1px solid var(--border);border-radius:8px;padding:14px}.agent-metric strong{display:block;color:var(--navy);font-size:23px}
+.agent-stage{border:1px solid var(--border);border-radius:8px;padding:16px;margin:14px 0}.agent-stage h3{margin-top:0}
+.agent-table-wrap{width:100%;overflow-x:auto}.agent-table{width:100%;border-collapse:collapse;font-size:14px}
+.agent-table th,.agent-table td{border-bottom:1px solid var(--border);padding:8px;text-align:left;white-space:nowrap}
+.agent-table th{background:#f3f6f8;color:var(--navy)}.agent-explanation{background:#eaf3f5;border-left:4px solid var(--teal);padding:16px;border-radius:4px;white-space:pre-wrap}
+.agent-error{color:#8b2525;background:#fff1f0;border:1px solid #e6b8b5;padding:12px;border-radius:6px}
+@media(max-width:700px){.agent-filters{grid-template-columns:1fr}.agent-metrics{grid-template-columns:1fr}}
+
 </style>
 </head>
 
@@ -241,6 +259,7 @@ footer a {
             <a href="#eda">EDA Visualizations</a>
             <a href="#findings">Key Findings</a>
             <a href="#dashboard">Dashboard</a>
+            <a href="#ai-agent">AI Agent Explorer</a>
             <a href="#experiment">A/B Test</a>
 			<a href="#Takeaways">Takeaways</a>
             <a href="#screenrecord">Screen recording</a>
@@ -505,6 +524,26 @@ footer a {
 	</section>
 
 
+
+<section id="ai-agent">
+<h2>CDC Mental Health AI Agent</h2>
+<p class="agent-intro">Select the CDC Mental Health records you want to investigate. The agent retrieves matching records, checks data quality and year coverage, analyzes comparable values, and uses an LLM to explain the evidence. This is a population-level data exploration tool, not an individual mental-health assessment.</p>
+<div class="note"><strong>How the workflow works:</strong> 1. Retrieve CDC records &nbsp;→&nbsp; 2. Check data quality &nbsp;→&nbsp; 3. Analyze selected records &nbsp;→&nbsp; LLM explanation.</div>
+<div class="agent-filters">
+<div class="agent-field"><label for="agent-unit">1. Data value unit (select one)</label><select id="agent-unit"><option>All available</option></select><p class="agent-help">For example, Number or %. This is different from estimate type.</p></div>
+<div class="agent-field"><label for="agent-question">2. Question (select one)</label><select id="agent-question"><option>All questions</option></select></div>
+<div class="agent-field"><label for="agent-start-year">3. Start year</label><select id="agent-start-year"></select></div>
+<div class="agent-field"><label for="agent-end-year">End year</label><select id="agent-end-year"></select></div>
+<div class="agent-field"><label for="agent-locations">4. Locations (select multiple)</label><select id="agent-locations" multiple size="7"></select><p class="agent-help">Use Ctrl (Windows) or Command (Mac) to select multiple locations. All are selected initially.</p></div>
+<div class="agent-field"><label for="agent-categories">5. Stratification category (select multiple)</label><select id="agent-categories" multiple size="7"></select></div>
+<div class="agent-field"><label for="agent-groups">6. Stratification group (select multiple)</label><select id="agent-groups" multiple size="7"></select><p class="agent-help">Options update based on the selected categories.</p></div>
+<div class="agent-field"><label for="agent-estimate">Estimate type (select one)</label><select id="agent-estimate"><option>All available</option></select><p class="agent-help">Distinguishes estimates such as crude and age-adjusted prevalence.</p></div>
+</div>
+<div class="agent-actions"><button class="agent-run" id="agent-run" type="button" disabled>Run CDC AI Agent</button><span class="agent-status" id="agent-status" role="status" aria-live="polite">Connecting to CDC data service…</span></div>
+<div id="agent-results" class="agent-results" hidden aria-live="polite"></div>
+<p class="agent-help">Source: CDC U.S. Chronic Disease Indicators. Missing values are not treated as zero. Comparisons should use the same question, unit, estimate type, and demographic group.</p>
+</section>
+
     <!--  A/B TEST -->
 
     <section id="experiment">
@@ -616,6 +655,23 @@ footer a {
     </p>
 </footer>
 
+
+
+<script>
+(() => {
+const API_BASE="https://YOUR-RENDER-SERVICE.onrender.com";
+const el=id=>document.getElementById(id), state={options:null};
+function options(select,values,all){select.innerHTML="";if(all){const o=document.createElement("option");o.value=all;o.textContent=all;select.appendChild(o)}(values||[]).forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;select.appendChild(o)})}
+function chosen(select){return Array.from(select.selectedOptions).map(o=>o.value)}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function table(rows){if(!rows||!rows.length)return "<p>No numeric summary rows were available.</p>";const cols=Object.keys(rows[0]);return '<div class="agent-table-wrap"><table class="agent-table"><thead><tr>'+cols.map(c=>"<th>"+esc(c)+"</th>").join("")+"</tr></thead><tbody>"+rows.slice(0,60).map(r=>"<tr>"+cols.map(c=>"<td>"+esc(r[c])+"</td>").join("")+"</tr>").join("")+"</tbody></table></div>"}
+function display(d){const root=el("agent-results");root.hidden=false;const cov=esc(JSON.stringify({years_by_location:d.quality.years_by_location,missing_years_by_location:d.quality.missing_years_by_location},null,2));root.innerHTML="<h3>Agent results</h3><div class='agent-metrics'><div class='agent-metric'>Matching records<strong>"+Number(d.retrieval.matching_rows).toLocaleString()+"</strong></div><div class='agent-metric'>Records with values<strong>"+Number(d.retrieval.rows_with_values).toLocaleString()+"</strong></div><div class='agent-metric'>Missing values<strong>"+Number(d.retrieval.rows_missing_values).toLocaleString()+"</strong></div></div><article class='agent-stage'><h3>Step 1 — Retrieve CDC records</h3><p>Matching rows and record preview:</p>"+table(d.retrieval.records)+"</article><article class='agent-stage'><h3>Step 2 — Check data quality</h3><p>"+esc(d.quality.quality_note)+"</p><p><b>Years shared by selected locations:</b> "+esc((d.quality.years_shared_by_all_selected_locations||[]).join(", ")||"None identified")+"</p><details><summary>Year coverage by location</summary><pre>"+cov+"</pre></details></article><article class='agent-stage'><h3>Step 3 — Analyze selected records</h3><p>"+Number(d.analysis.valid_rows_used).toLocaleString()+" numeric rows used. "+esc(d.analysis.note)+"</p>"+table(d.analysis.summary_by_location_and_year)+"</article><article class='agent-stage'><h3>LLM-generated explanation</h3><p class='agent-explanation'>"+esc(d.explanation)+"</p><p class='agent-help'>Model: "+esc(d.model)+". Explanation generated from the three data tools' evidence.</p></article>"}
+async function load(){if(API_BASE.includes("YOUR-RENDER-SERVICE")){el("agent-status").textContent="The website section is installed. The secure data service still needs to be deployed and connected.";return}try{const r=await fetch(API_BASE+"/options");if(!r.ok)throw Error("Data service returned "+r.status);const o=await r.json();state.options=o;options(el("agent-unit"),o.data_units,"All available");options(el("agent-question"),o.questions,"All questions");options(el("agent-estimate"),o.estimate_types,"All available");options(el("agent-locations"),o.locations);options(el("agent-categories"),o.demographic_categories,"All categories");options(el("agent-groups"),o.demographic_groups,"All groups");options(el("agent-start-year"),(o.years||[]).map(String));options(el("agent-end-year"),(o.years||[]).map(String));if(o.years&&o.years.length){el("agent-start-year").value=String(o.years[0]);el("agent-end-year").value=String(o.years[o.years.length-1])}Array.from(el("agent-locations").options).forEach(o=>o.selected=true);el("agent-categories").options[0].selected=true;el("agent-groups").options[0].selected=true;el("agent-run").disabled=false;el("agent-status").textContent="CDC filter options loaded. Choose filters and run the agent."}catch(e){el("agent-status").textContent="Could not load filter options. "+e.message}}
+el("agent-categories").addEventListener("change",()=>{if(!state.options)return;const cats=chosen(el("agent-categories")),map=state.options.groups_by_category||{};let groups=[];if(!cats.length||cats.includes("All categories"))groups=state.options.demographic_groups||[];else cats.forEach(c=>groups=groups.concat(map[c]||[]));options(el("agent-groups"),[...new Set(groups)].sort(),"All groups");el("agent-groups").options[0].selected=true});
+el("agent-run").addEventListener("click",async()=>{const b=el("agent-run"),s=el("agent-status"),root=el("agent-results");if(API_BASE.includes("YOUR-RENDER-SERVICE")){s.textContent="The backend has not been deployed or connected yet.";return}const loc=chosen(el("agent-locations"));if(!loc.length){s.textContent="Please select at least one location.";return}const cats=chosen(el("agent-categories")),groups=chosen(el("agent-groups"));const payload={data_unit:el("agent-unit").value,question:el("agent-question").value,start_year:Number(el("agent-start-year").value),end_year:Number(el("agent-end-year").value),locations:loc,demographic_categories:cats.includes("All categories")?[]:cats,demographic_groups:groups.includes("All groups")?[]:groups,estimate_type:el("agent-estimate").value};b.disabled=true;root.hidden=true;s.textContent="Running data tools and generating the LLM explanation…";try{const r=await fetch(API_BASE+"/analyze",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const d=await r.json();if(!r.ok)throw Error(d.detail||"Analysis request failed.");display(d);s.textContent="All three data stages and the LLM explanation completed."}catch(e){root.hidden=false;root.innerHTML='<p class="agent-error">'+esc(e.message)+"</p>";s.textContent="The analysis could not be completed."}finally{b.disabled=false}});
+load();
+})();
+</script>
 
 </body>
 </html>
