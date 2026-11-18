@@ -1,0 +1,9 @@
+.env
+.streamlit/secrets.toml
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+*.py[cod]
+.DS_Store
+U.S._Chronic_Disease_Indicators_20260930.csv
