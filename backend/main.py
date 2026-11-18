@@ -219,7 +219,11 @@ def analyze(filters_model: AgentFilters) -> dict[str, Any]:
 
     @tool
     def retrieve_CDC_data(filters_json: str) -> str:
-        """Retrieve matching CDC Mental Health rows and report value availability."""
+        """Retrieve matching CDC Mental Health rows and report value availability.
+
+    Args:
+        filters_json: JSON-encoded filter selections for the CDC records.
+    """
         selected = filter_CDC_MH(json.loads(filters_json))
         columns = [
             "LocationDesc", "YearStart", "Question", "DataValue",
@@ -238,7 +242,11 @@ def analyze(filters_model: AgentFilters) -> dict[str, Any]:
 
     @tool
     def check_CDC_data_quality(filters_json: str) -> str:
-        """Check missing values and year coverage for the selected locations."""
+        """Check missing values and year coverage for the selected locations.
+
+    Args:
+        filters_json: JSON-encoded filters defining locations and years.
+    """
         selected_filters = json.loads(filters_json)
         selected = filter_CDC_MH(selected_filters)
         years_by_location: dict[str, list[int]] = {}
@@ -279,7 +287,11 @@ def analyze(filters_model: AgentFilters) -> dict[str, Any]:
 
     @tool
     def analyze_CDC_data(filters_json: str) -> str:
-        """Summarize numeric CDC values without combining unlike measures or groups."""
+        """Summarize numeric CDC values without combining unlike measures or groups.
+
+    Args:
+        filters_json: JSON-encoded filters defining comparable CDC records.
+    """
         selected = filter_CDC_MH(json.loads(filters_json)).dropna(
             subset=["DataValue", "YearStart"]
         ).copy()
