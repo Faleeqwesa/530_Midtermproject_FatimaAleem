@@ -369,8 +369,9 @@ def analyze(filters_model: AgentFilters) -> dict[str, Any]:
             "missing years. Do not treat missing values as zero or invent statistics. "
             "Do not make causal claims, diagnoses, or treatment recommendations. "
             "Explain that these are population-level CDC indicators, not information "
-            "about an individual's mental health. Respond in exactly two sentences, "
-            "with no heading or bullets, and keep the wording clear and concise."
+            "about an individual's mental health. Summarize the selected measure, main pattern, "
+            "and a key data limitation in exactly two short sentences of no more than 20 words each. "
+            "Use no heading or bullets."
         )
         client = OpenAI(api_key=api_key)
         response = client.responses.create(
